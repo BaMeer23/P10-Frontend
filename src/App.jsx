@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import Dashboard from './Dashboard';
-import Login from './Login';
+import Login from './login';
 import Register from './Register';
 
 function App() {
