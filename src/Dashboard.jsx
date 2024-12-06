@@ -22,7 +22,7 @@ function Dashboard() {
         } catch (error) {
           setTimeout(() => {
             navigate('/Login');
-          }, 30000);
+          }, 180000);
         }
       }
     };
