@@ -36,7 +36,7 @@ function Register() {
         username,
         passwordx: password,
       });
-      navigate('/login');
+      navigate('/Login');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed.');
     } finally {
@@ -152,7 +152,7 @@ function Register() {
                 <Button
                   variant="secondary"
                   className="w-100 mt-2"
-                  onClick={() => navigate('/login')}
+                  onClick={() => navigate('/Login')}
                   disabled={loading}
                   style={{
                     borderRadius: '5px',

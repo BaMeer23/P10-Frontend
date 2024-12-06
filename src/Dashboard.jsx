@@ -12,7 +12,7 @@ function Dashboard() {
       const token = localStorage.getItem('token');
       if (!token) {
         setTimeout(() => {
-          navigate('/login');
+          navigate('/Login');
         }, 10000);
       } else {
         try {
@@ -21,7 +21,7 @@ function Dashboard() {
           setUser(decoded_token);
         } catch (error) {
           setTimeout(() => {
-            navigate('/login');
+            navigate('/Login');
           }, 180000);
         }
       }
@@ -33,7 +33,7 @@ function Dashboard() {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setTimeout(() => {
-      navigate('/login');
+      navigate('/Login');
     }, 3000);
   };
 

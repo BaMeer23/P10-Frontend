@@ -164,7 +164,7 @@ function Login() {
                   </Button>
                   <div className="text-center mt-3">
                     <Link
-                      to="/register"
+                      to="/Register"
                       className="text-decoration-none"
                       style={{
                         color: '#6a11cb',
