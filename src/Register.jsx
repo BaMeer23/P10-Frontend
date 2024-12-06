@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button, Form, Container, Row, Col, Spinner, Alert } from 'react-bootstrap';
+import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
 
-// Ensure this is the correct URL of your backend server
 const API_ENDPOINT = 'https://myschoolcode.onrender.com/api';
 
 function Register() {
@@ -18,116 +17,153 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Basic validation
     if (fullname.trim() === '' || username.trim() === '' || password.trim() === '') {
       setError('All fields are required.');
       return;
     }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
+    if (password.length < 5) {
+      setError('Password must be at least 6 characters.');
       return;
     }
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
       return;
     }
-
-    setLoading(true); // Show loading indicator
-
+    setLoading(true);
     try {
       await axios.post(`${API_ENDPOINT}/auth/register`, {
         fullname,
         username,
-        passwordx: password, // Use the backend field name
+        passwordx: password,
       });
-      navigate('/login'); // Redirect to login on success
+      navigate('/login');
     } catch (err) {
-      // Error handling
-      if (err.response && err.response.data && err.response.data.error) {
-        setError(err.response.data.error); // Show backend error message
-      } else {
-        setError('Registration failed. Please try again later.');
-      }
+      setError(err.response?.data?.error || 'Registration failed.');
     } finally {
-      setLoading(false); // Hide loading indicator
+      setLoading(false);
     }
   };
 
   return (
     <Container>
-      <Row className="justify-content-md-center">
+      <Row className="justify-content-md-center" style={{ marginTop: '10vh' }}>
         <Col md={4}>
-          <div className="register-form">
-            <div className="card">
-              <div className="card-body">
-                <h3 className="text-center">Register</h3>
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group controlId="formFullname">
-                    <Form.Label>Full Name:</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={fullname}
-                      onChange={(e) => setFullname(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formUsername" className="mt-3">
-                    <Form.Label>Username:</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formPassword" className="mt-3">
-                    <Form.Label>Password:</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formConfirmPassword" className="mt-3">
-                    <Form.Label>Confirm Password:</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Confirm password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
-
-                  {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-
-                  <Button
-                    variant="success"
-                    type="submit"
-                    className="w-100 mt-3"
-                    disabled={loading} // Disable button while loading
-                  >
-                    {loading ? <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" /> : 'Register'}
-                  </Button>
-
-                  <Button
-                    variant="secondary"
-                    onClick={() => navigate('/login')}
-                    className="w-100 mt-2"
-                    disabled={loading} // Disable button while loading
-                  >
-                    Back to Login
-                  </Button>
-                </Form>
-              </div>
+          <div
+            className="card"
+            style={{
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              borderRadius: '12px',
+              background: '#ffffff',
+              padding: '20px',
+            }}
+          >
+            <div className="card-body">
+              <h3
+                className="text-center"
+                style={{
+                  fontFamily: "'Roboto', sans-serif",
+                  fontWeight: '700',
+                  color: '#333',
+                }}
+              >
+                Register
+              </h3>
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="formFullname">
+                  <Form.Label>Full Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={fullname}
+                    onChange={(e) => setFullname(e.target.value)}
+                    placeholder="Enter your full name"
+                    style={{
+                      borderRadius: '5px',
+                      border: '1px solid #ddd',
+                      padding: '10px',
+                    }}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="formUsername" className="mt-3">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    style={{
+                      borderRadius: '5px',
+                      border: '1px solid #ddd',
+                      padding: '10px',
+                    }}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="formPassword" className="mt-3">
+                  <Form.Label>Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your password"
+                    style={{
+                      borderRadius: '5px',
+                      border: '1px solid #ddd',
+                      padding: '10px',
+                    }}
+                    required
+                  />
+                </Form.Group>
+                <Form.Group controlId="formConfirmPassword" className="mt-3">
+                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Control
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your password"
+                    style={{
+                      borderRadius: '5px',
+                      border: '1px solid #ddd',
+                      padding: '10px',
+                    }}
+                    required
+                  />
+                </Form.Group>
+                {error && (
+                  <Alert variant="danger" className="mt-3">
+                    {error}
+                  </Alert>
+                )}
+                <Button
+                  variant="dark"
+                  type="submit"
+                  className="w-100 mt-3"
+                  style={{
+                    background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                    border: 'none',
+                    borderRadius: '5px',
+                    padding: '12px 0',
+                    fontWeight: 'bold',
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? 'Registering...' : 'Register'}
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="w-100 mt-2"
+                  onClick={() => navigate('/login')}
+                  disabled={loading}
+                  style={{
+                    borderRadius: '5px',
+                    border: '1px solid #ddd',
+                    padding: '12px 0',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Back to Login
+                </Button>
+              </Form>
             </div>
           </div>
         </Col>

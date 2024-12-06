@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.css';
 import { Container, Navbar, Form, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { API_ENDPOINT } from './Api'; // Assuming this is where your API endpoint is defined
+import { API_ENDPOINT } from './Api';
 
 function Login() {
   const navigate = useNavigate();
@@ -14,105 +13,168 @@ function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mimicking the behavior of canActivate
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     if (user) {
-      // Token exists, navigate to dashboard directly
-      navigate('/Dashboard', { replace: true },5000);
+      setTimeout(() => {
+        navigate('/Dashboard', { replace: true });
+      }, 5000); // Delay of 5000ms (5 seconds)
     }
-  }, [navigate]); // This only runs on initial mount to check for a token in localStorage
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(''); // Reset error on every submit attempt
+    setError('');
 
     try {
       const response = await axios.post(`${API_ENDPOINT}/api/auth/login`, {
         username,
-        passwordx: password, // Keep passwordx intentional here (based on your API)
+        passwordx: password,
       });
-
-      // Set token to localStorage if login is successful
       localStorage.setItem('token', JSON.stringify(response.data));
-
-      // Navigate only after login is successful
       setIsLoading(false);
-
-      // Adding a 1-second delay before redirecting to the Dashboard
       setTimeout(() => {
         navigate('/Dashboard', { replace: true });
-      }, 6000);  // 1-second delay
-
+      }, 10000); // Delay of 10000ms (10 seconds)
     } catch (err) {
       setIsLoading(false);
-      setError('Invalid username or password');  // Display error message
+      setError('Invalid username or password');
     }
   };
 
   return (
     <>
-      <Navbar bg="success" variant="dark">
+      <Navbar
+        style={{
+          background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+          padding: '1rem',
+          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        }}
+        variant="dark"
+      >
         <Container>
-          <Navbar.Brand>Naga College Foundation, Inc.</Navbar.Brand>
+          <Navbar.Brand
+            style={{
+              fontFamily: "'Poppins', sans-serif",
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              color: '#fff',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+            }}
+          >
+            Combine F&B
+          </Navbar.Brand>
         </Container>
       </Navbar>
-
       <Container>
-        <Row className="justify-content-md-center">
+        <Row className="justify-content-md-center" style={{ marginTop: '10vh' }}>
           <Col md={4}>
-            <div className="login-form">
-              <div className="card">
-                <div className="card-body">
-                  <center>
-                    <h4>NCFi: Proposed Enrollment System</h4>
-                  </center>
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId="formUsername">
-                      <Form.Label>Username:</Form.Label>
+            <div
+              className="card"
+              style={{
+                boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                borderRadius: '12px',
+                background: '#ffffff',
+                padding: '20px',
+              }}
+            >
+              <div className="card-body">
+                <h4
+                  className="text-center"
+                  style={{
+                    fontFamily: "'Roboto', sans-serif",
+                    fontWeight: '700',
+                    color: '#333',
+                  }}
+                >
+                  Login/10sDelay
+                </h4>
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group controlId="formUsername">
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="Enter your username"
+                      style={{
+                        borderRadius: '5px',
+                        border: '1px solid #ddd',
+                        padding: '10px',
+                      }}
+                      required
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="formPassword" className="mt-3">
+                    <Form.Label>Password</Form.Label>
+                    <div className="input-group">
                       <Form.Control
-                        type="text"
-                        placeholder="Enter Username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        type={isPasswordVisible ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter your password"
+                        style={{
+                          borderRadius: '5px',
+                          border: '1px solid #ddd',
+                          padding: '10px',
+                        }}
                         required
                       />
-                    </Form.Group>
-                    <Form.Group controlId="formPassword" className="mt-3">
-                      <Form.Label>Password:</Form.Label>
-                      <div className="input-group">
-                        <Form.Control
-                          type={isPasswordVisible ? 'text' : 'password'}
-                          placeholder="Enter Password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          required
-                        />
-                        <Button
-                          variant="outline-secondary"
-                          onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                        >
-                          {isPasswordVisible ? 'Hide' : 'Show'}
-                        </Button>
-                      </div>
-                    </Form.Group>
-
-                    {error && <p style={{ color: 'red' }}>{error}</p>}
-                    <Button
-                      variant="success"
-                      type="submit"
-                      className="w-100 mt-3"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? 'Logging in...' : 'Login Now'}
-                    </Button>
-
-                    <div className="text-center mt-3">
-                      <Link to="/register">Don't have an account? Register</Link>
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                        style={{
+                          borderRadius: '0 5px 5px 0',
+                          background: '#6a11cb',
+                          color: '#fff',
+                          border: 'none',
+                        }}
+                      >
+                        {isPasswordVisible ? 'Hide' : 'Show'}
+                      </Button>
                     </div>
-                  </Form>
-                </div>
+                  </Form.Group>
+                  {error && (
+                    <p
+                      className="text-danger mt-2"
+                      style={{
+                        fontSize: '0.9rem',
+                        textAlign: 'center',
+                        fontFamily: "'Roboto', sans-serif",
+                      }}
+                    >
+                      {error}
+                    </p>
+                  )}
+                  <Button
+                    variant="dark"
+                    type="submit"
+                    className="w-100 mt-3"
+                    style={{
+                      background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                      border: 'none',
+                      borderRadius: '5px',
+                      padding: '12px 0',
+                      fontWeight: 'bold',
+                    }}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Logging in...' : 'Login'}
+                  </Button>
+                  <div className="text-center mt-3">
+                    <Link
+                      to="/register"
+                      className="text-decoration-none"
+                      style={{
+                        color: '#6a11cb',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      Don't have an account? Register
+                    </Link>
+                  </div>
+                </Form>
               </div>
             </div>
           </Col>
