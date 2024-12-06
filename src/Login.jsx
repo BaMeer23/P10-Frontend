@@ -4,7 +4,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css';
 import { Container, Navbar, Form, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { API_ENDPOINT } from './Api';
+import { API_ENDPOINT } from './Api'; // Assuming this is where your API endpoint is defined
 
 function Login() {
   const navigate = useNavigate();
@@ -14,34 +14,40 @@ function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Redirect if already logged in
+  // Mimicking the behavior of canActivate
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     if (user) {
-      navigate('/Dashboard', { replace: true }); // Avoid adding to history stack
+      // Token exists, navigate to dashboard directly
+      navigate('/Dashboard', { replace: true },5000);
     }
-  }, [navigate]); // Ensure this only runs once when the component is mounted
+  }, [navigate]); // This only runs on initial mount to check for a token in localStorage
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
+    setError(''); // Reset error on every submit attempt
 
     try {
       const response = await axios.post(`${API_ENDPOINT}/api/auth/login`, {
         username,
-        passwordx: password, // Keep passwordx intentional here
+        passwordx: password, // Keep passwordx intentional here (based on your API)
       });
 
       // Set token to localStorage if login is successful
       localStorage.setItem('token', JSON.stringify(response.data));
 
-      // Ensure navigation happens only after login completes
+      // Navigate only after login is successful
       setIsLoading(false);
-      navigate('/Dashboard', { replace: true });
+
+      // Adding a 1-second delay before redirecting to the Dashboard
+      setTimeout(() => {
+        navigate('/Dashboard', { replace: true });
+      }, 6000);  // 1-second delay
+
     } catch (err) {
       setIsLoading(false);
-      setError('Invalid username or password');
+      setError('Invalid username or password');  // Display error message
     }
   };
 

@@ -10,12 +10,21 @@ function Dashboard() {
   // Decode the token to get user information
   useEffect(() => {
     const fetchUser = () => {
-      try {
-        const response = JSON.parse(localStorage.getItem('token'));
-        const decoded_token = jwtDecode(response.data.token);
-        setUser(decoded_token);
-      } catch (error) {
-        navigate("/login");
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setTimeout(() => {
+          navigate("/login");  // Delay navigation to login
+        }, 5000);  // 2000ms = 2 seconds delay
+      } else {
+        try {
+          const response = JSON.parse(token);
+          const decoded_token = jwtDecode(response.data.token);
+          setUser(decoded_token);
+        } catch (error) {
+          setTimeout(() => {
+            navigate("/login");  // Delay navigation to login in case of decoding error
+          }, 6000);  // 2000ms = 2 seconds delay
+        }
       }
     };
 
@@ -24,7 +33,9 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate("/login");
+    setTimeout(() => {
+      navigate("/login");  // Delay navigation after logout
+    }, 2000);  // 2000ms = 2 seconds delay
   };
 
   return (
@@ -34,8 +45,9 @@ function Dashboard() {
           <Navbar.Brand href="#home">Naga College Foundation, Inc.</Navbar.Brand>
           <Nav className="me-auto">
             <Nav.Link href="#users">Users</Nav.Link>
-            <Nav.Link href="#departments">Departments</Nav.Link>
-            <Nav.Link href="#courses">Courses</Nav.Link>
+            <Nav.Link href="#Departments">Departments</Nav.Link>
+            <Nav.Link href="#Courses">Courses</Nav.Link>
+            <Nav.Link href="#Students">Students</Nav.Link>
           </Nav>
 
           <Nav className="ms-auto">
