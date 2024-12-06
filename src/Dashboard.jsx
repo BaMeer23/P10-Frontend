@@ -22,7 +22,7 @@ function Dashboard() {
         } catch (error) {
           setTimeout(() => {
             navigate('/Login');
-          }, 180000);
+          }, 30000);
         }
       }
     };
@@ -34,7 +34,7 @@ function Dashboard() {
     localStorage.removeItem('token');
     setTimeout(() => {
       navigate('/Login');
-    }, 3000);
+    }, 1500);
   };
 
   return (

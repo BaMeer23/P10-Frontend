@@ -16,30 +16,38 @@ function Login() {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('token'));
     if (user) {
-      setTimeout(() => {
-        navigate('/Dashboard', { replace: true });
-      }, 5000); // Delay of 5000ms (5 seconds)
+      navigate('/Dashboard', { replace: true });
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
+
+    // Validate inputs
+    if (!username.trim() || !password.trim()) {
+      setError('Please fill in both fields');
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const response = await axios.post(`${API_ENDPOINT}/api/auth/login`, {
         username,
-        passwordx: password,
+        passwordx: password, // Ensure passwordx matches your database field
       });
-      localStorage.setItem('token', JSON.stringify(response.data));
-      setIsLoading(false);
-      setTimeout(() => {
+
+      if (response.data && response.data.token) {
+        localStorage.setItem('token', JSON.stringify(response.data.token));
         navigate('/Dashboard', { replace: true });
-      }, 10000); // Delay of 10000ms (10 seconds)
+      } else {
+        setError('Unexpected response from server');
+      }
     } catch (err) {
-      setIsLoading(false);
       setError('Invalid username or password');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -88,7 +96,7 @@ function Login() {
                     color: '#333',
                   }}
                 >
-                  Login/10sDelay
+                  Login
                 </h4>
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formUsername">
