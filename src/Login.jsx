@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Navbar, Form, Row, Col, Button } from 'react-bootstrap';
+import { Container, Navbar, Form, Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { API_ENDPOINT } from './Api';
 
@@ -13,18 +13,18 @@ function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Check if token exists in localStorage and redirect to dashboard if authenticated
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('token'));
-    if (user) {
+    const token = localStorage.getItem('token');
+    if (token) {
       navigate('/Dashboard', { replace: true });
     }
   }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError('');  // Clear previous errors
 
-    // Validate inputs
     if (!username.trim() || !password.trim()) {
       setError('Please fill in both fields');
       return;
@@ -35,17 +35,35 @@ function Login() {
     try {
       const response = await axios.post(`${API_ENDPOINT}/api/auth/login`, {
         username,
-        passwordx: password, // Ensure passwordx matches your database field
+        passwordx: password, // Backend expects this field
       });
 
-      if (response.data && response.data.token) {
-        localStorage.setItem('token', JSON.stringify(response.data.token));
-        navigate('/Dashboard', { replace: true });
+      if (response.data?.token) {
+        // Adding delay before redirecting to dashboard
+        setTimeout(() => {
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('user', JSON.stringify({ username }));
+          navigate('/Dashboard', { replace: true });
+        }, 500);  // Delay for 500ms (can be adjusted as needed)
       } else {
-        setError('Unexpected response from server');
+        setError('Unexpected response from server. Please try again later.');
       }
     } catch (err) {
-      setError('Invalid username or password');
+      console.error('Login Error:', err.response?.data || err.message);
+
+      if (err.response?.status === 401) {
+        // Invalid credentials
+        setError('Invalid username or password');
+      } else if (err.response?.status === 400) {
+        // Token or other client errors
+        setError('Invalid request. Please check your input.');
+      } else if (err.response?.status === 500) {
+        // Server errors
+        setError('Server error. Please try again later.');
+      } else {
+        // Catch-all error handler for any other cases
+        setError('An error occurred. Please try again later.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -168,7 +186,13 @@ function Login() {
                     }}
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Logging in...' : 'Login'}
+                    {isLoading ? (
+                      <>
+                        <Spinner animation="border" size="sm" /> Logging in...
+                      </>
+                    ) : (
+                      'Login'
+                    )}
                   </Button>
                   <div className="text-center mt-3">
                     <Link
