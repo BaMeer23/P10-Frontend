@@ -13,6 +13,9 @@ import Students from './Students';
 import Settings from './Settings';
 import Profile from './Profile';
 
+// Import jwt-decode correctly
+import jwt_decode from 'jwt-decode'; 
+
 function App() {
   const [bgColor, setBgColor] = useState(localStorage.getItem('bgColor') || '');
   const [user, setUser] = useState(null);
@@ -22,15 +25,16 @@ function App() {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        const decodedToken = JSON.parse(atob(token.split('.')[1]));
+        const decodedToken = jwt_decode(token); // Use jwt-decode for token decoding
         setUser(decodedToken);
+        setIsAuthenticated(true); // Set as authenticated if token is valid
       } catch (err) {
         console.error('Invalid token:', err);
         localStorage.removeItem('token');
         setIsAuthenticated(false);
       }
     }
-  }, [isAuthenticated]);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -41,7 +45,9 @@ function App() {
   return (
     <Router>
       <div style={{ backgroundColor: bgColor || '', minHeight: '100vh' }}>
+        {/* Only render Navbar if authenticated */}
         {isAuthenticated && <NavbarComponent user={user} handleLogout={handleLogout} />}
+        
         <Routes>
           {/* Public Routes */}
           <Route
@@ -54,7 +60,7 @@ function App() {
           />
 
           {/* Redirect unauthenticated users */}
-          {!isAuthenticated && <Route path="*" element={<Navigate to="/Login" replace />} />}
+          <Route path="*" element={isAuthenticated ? <Navigate to="/Dashboard" /> : <Navigate to="/Login" />} />
 
           {/* Authenticated Routes */}
           {isAuthenticated && (
@@ -66,7 +72,6 @@ function App() {
               <Route path="/Students" element={<Students />} />
               <Route path="/Profile" element={<Profile />} />
               <Route path="/Settings" element={<Settings setBgColor={setBgColor} />} />
-              <Route path="*" element={<Navigate to="/Dashboard" replace />} />
             </>
           )}
         </Routes>
