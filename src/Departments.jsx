@@ -1,60 +1,110 @@
 import React from 'react';
-import { Container, Row, Col, ProgressBar, Badge } from 'react-bootstrap';
-import { FaBuilding, FaUniversity } from 'react-icons/fa'; // Font Awesome Icons
+import { Container, Row, Col, ProgressBar, Card } from 'react-bootstrap';
+import { FaBuilding, FaUniversity, FaUsers } from 'react-icons/fa';
 
 function Departments() {
   return (
-    <>
-      <Container className="mt-5">
-        <div className="card" style={{
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-          borderRadius: '12px',
-          background: '#ffffff',
-          padding: '30px',
-          textAlign: 'center',
-        }}>
-          <h1 style={{ fontFamily: "'Roboto', sans-serif", fontWeight: '700', color: '#333' }}>
-            <FaBuilding style={{ fontSize: '2rem', color: '#6a11cb' }} /> Departments
-          </h1>
-          <p style={{ color: '#555', marginTop: '15px', fontSize: '1rem' }}>
-            Manage departments, track department growth, and allocate resources.
-          </p>
-          
-          {/* Stats and Progress */}
-          <Row className="mt-4">
+    <Container className="mt-5">
+      <Card style={{ boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)', borderRadius: '16px' }}>
+        <Card.Body>
+          <Row className="text-center">
             <Col>
-              <div style={{ fontSize: '1.5rem', color: '#2575fc' }}>
-                🏢 Total Departments: 5
-              </div>
-              <ProgressBar now={60} label="Operational" style={{ marginTop: '10px' }} />
+              <h1 style={{ fontFamily: "'Roboto', sans-serif", fontWeight: '700', color: '#333' }}>
+                <FaBuilding style={{ fontSize: '2.5rem', color: '#6a11cb' }} /> Departments Dashboard
+              </h1>
+              <p style={{ color: '#555', marginTop: '10px', fontSize: '1rem' }}>
+                Manage departments, track growth, allocate resources, and monitor staff performance.
+              </p>
             </Col>
-            <Col>
-              <div style={{ fontSize: '1.5rem', color: '#2575fc' }}>
-                🏫 Active Departments: 4 <Badge bg="success">80%</Badge>
+          </Row>
+
+          {/* Summary Row */}
+          <Row className="mt-4">
+            <Col md={3}>
+              <div className="d-flex justify-content-center align-items-center" style={{ fontSize: '1.5rem', color: '#2575fc' }}>
+                <FaBuilding style={{ fontSize: '2rem', marginRight: '10px' }} />
+                <div>
+                  <div>Total Departments:</div>
+                  <strong>5</strong>
+                </div>
               </div>
-              <div style={{ marginTop: '20px' }}>
-                <FaUniversity style={{ color: '#28a745', fontSize: '2rem' }} />
-                <p>New Department Setup</p>
+            </Col>
+            <Col md={3}>
+              <div className="d-flex justify-content-center align-items-center" style={{ fontSize: '1.5rem', color: '#2575fc' }}>
+                <FaUniversity style={{ fontSize: '2rem', marginRight: '10px' }} />
+                <div>
+                  <div>Active Departments:</div>
+                  <strong>4</strong>
+                </div>
+              </div>
+            </Col>
+            <Col md={3}>
+              <div className="d-flex justify-content-center align-items-center" style={{ fontSize: '1.5rem', color: '#2575fc' }}>
+                <FaUsers style={{ fontSize: '2rem', marginRight: '10px' }} />
+                <div>
+                  <div>Staff Strength:</div>
+                  <strong>50</strong>
+                </div>
+              </div>
+            </Col>
+            <Col md={3}>
+              <div className="d-flex justify-content-center align-items-center" style={{ fontSize: '1.5rem', color: '#2575fc' }}>
+                <FaUsers style={{ fontSize: '2rem', marginRight: '10px' }} />
+                <div>
+                  <div>Pending Approvals:</div>
+                  <strong>1</strong>
+                </div>
               </div>
             </Col>
           </Row>
 
           {/* Additional Info */}
           <Row className="mt-5">
-            <Col>
-              <div style={{ fontSize: '1.2rem', color: '#6a11cb' }}>
-                📝 Department Budget: $200,000
+            <Col md={6}>
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  padding: '20px',
+                  fontSize: '1.2rem',
+                  textAlign: 'center',
+                }}
+              >
+                <strong>💼 Department Growth</strong><br />
+                30% Growth
               </div>
-              <div style={{ fontSize: '1.2rem', color: '#2575fc' }}>
-                🗓️ Last Review: 2 weeks ago
+            </Col>
+            <Col md={6}>
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #2575fc 0%, #6a11cb 100%)',
+                  borderRadius: '12px',
+                  color: '#fff',
+                  padding: '20px',
+                  fontSize: '1.2rem',
+                  textAlign: 'center',
+                }}
+              >
+                <strong>🛠️ Last Update</strong><br />
+                5 days ago
               </div>
             </Col>
           </Row>
-        </div>
-      </Container>
-    </>
+
+          {/* Progress Bars */}
+          <Row className="mt-5">
+            <Col>
+              <ProgressBar now={80} label="Department Growth (80%)" variant="success" style={{ borderRadius: '10px' }} />
+            </Col>
+            <Col>
+              <ProgressBar now={50} label="Pending Approvals (50%)" variant="info" style={{ borderRadius: '10px' }} />
+            </Col>
+          </Row>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 
 export default Departments;
- 
