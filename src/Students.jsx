@@ -1,12 +1,10 @@
 import React from 'react';
-import NavbarComponent from './NavbarComponent';
 import { Container, Row, Col, ProgressBar } from 'react-bootstrap';
 import { FaUserGraduate, FaSchool } from 'react-icons/fa';
 
 function Students() {
   return (
     <>
-      <NavbarComponent />
       <Container className="mt-5">
         <div className="card" style={{
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',

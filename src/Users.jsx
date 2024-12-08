@@ -1,12 +1,10 @@
 import React from 'react';
-import NavbarComponent from './NavbarComponent';
 import { Container, Row, Col, ProgressBar, Badge } from 'react-bootstrap';
 import { FaUser, FaUsersCog } from 'react-icons/fa'; // Font Awesome Icons
 
 function Users() {
   return (
     <>
-      <NavbarComponent />
       <Container className="mt-5">
         <div className="card" style={{
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',

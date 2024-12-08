@@ -5,7 +5,7 @@ import { Container, Navbar, Form, Row, Col, Button, Spinner } from 'react-bootst
 import { Link } from 'react-router-dom';
 import { API_ENDPOINT } from './Api';
 
-function Login() {
+function Login({ setIsAuthenticated }) {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,7 +13,7 @@ function Login() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Check if token exists in localStorage and redirect to dashboard if authenticated
+  // Redirect to Dashboard if already logged in
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -23,8 +23,9 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');  // Clear previous errors
+    setError(''); // Clear previous errors
 
+    // Validate fields
     if (!username.trim() || !password.trim()) {
       setError('Please fill in both fields');
       return;
@@ -35,33 +36,29 @@ function Login() {
     try {
       const response = await axios.post(`${API_ENDPOINT}/api/auth/login`, {
         username,
-        passwordx: password, // Backend expects this field
+        passwordx: password, // Assuming this is correct as per backend requirements
       });
 
       if (response.data?.token) {
-        // Adding delay before redirecting to dashboard
-        setTimeout(() => {
-          localStorage.setItem('token', response.data.token);
-          localStorage.setItem('user', JSON.stringify({ username }));
-          navigate('/Dashboard', { replace: true });
-        }, 500);  // Delay for 500ms (can be adjusted as needed)
+        // Store the token and user info
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify({ username }));
+        setIsAuthenticated(true); // Update authentication state in App
+        navigate('/Dashboard', { replace: true });
       } else {
         setError('Unexpected response from server. Please try again later.');
       }
     } catch (err) {
       console.error('Login Error:', err.response?.data || err.message);
 
+      // Handle different error statuses
       if (err.response?.status === 401) {
-        // Invalid credentials
         setError('Invalid username or password');
       } else if (err.response?.status === 400) {
-        // Token or other client errors
         setError('Invalid request. Please check your input.');
       } else if (err.response?.status === 500) {
-        // Server errors
         setError('Server error. Please try again later.');
       } else {
-        // Catch-all error handler for any other cases
         setError('An error occurred. Please try again later.');
       }
     } finally {

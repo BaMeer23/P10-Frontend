@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { FaCog, FaPaintBrush } from 'react-icons/fa';
-import NavbarComponent from './NavbarComponent';
 
 function Settings({ setBgColor }) {
   // Function to handle the background color change
@@ -22,7 +21,6 @@ function Settings({ setBgColor }) {
 
   return (
     <>
-      <NavbarComponent />
       <Container className="mt-5">
         <div
           className="card"

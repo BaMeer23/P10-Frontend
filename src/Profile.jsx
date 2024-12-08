@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import NavbarComponent from './NavbarComponent';
 import { Container, Row, Col, Card, Form, Button, Alert, Image } from 'react-bootstrap';
 import { FaUserCircle, FaEdit } from 'react-icons/fa'; 
 import axios from 'axios';
@@ -81,7 +80,6 @@ function Profile() {
 
   return (
     <>
-      <NavbarComponent />
       <Container className="mt-5">
         <Row>
           <Col md={12}>
