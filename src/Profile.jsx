@@ -13,16 +13,24 @@ function Profile() {
     if (token) {
       const user = JSON.parse(localStorage.getItem('user'));
       if (user) {
-        setUserData({ username: user.username, gender: user.gender || 'male' });
+        // Fetch gender from localStorage or use default 'male'
+        const storedGender = localStorage.getItem('gender') || 'male';
+        setUserData({ username: user.username, gender: storedGender });
       }
     }
   }, []);
 
   const toggleGender = () => {
+    const newGender = userData.gender === 'male' ? 'female' : 'male';
+    
+    // Update the state and store the new gender in localStorage
     setUserData((prevData) => ({
       ...prevData,
-      gender: prevData.gender === 'male' ? 'female' : 'male',
+      gender: newGender,
     }));
+
+    // Persist the gender change in localStorage
+    localStorage.setItem('gender', newGender);
   };
 
   return (
@@ -30,15 +38,16 @@ function Profile() {
       <Col md={6} className="text-center">
         <div
           style={{
-            width: '100px',
-            height: '100px',
+            width: '200px',
+            height: '200px',
             borderRadius: '50%',
             backgroundColor: '#f0f0f0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '2.5rem',
-            border: '2px solid #6a11cb',
+            fontSize: '5rem', // Increase font size for bigger emoji
+            border: '3px solid #6a11cb', // Change border color
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)', // Add a subtle shadow for depth
             margin: '0 auto',
           }}
         >
@@ -46,10 +55,12 @@ function Profile() {
         </div>
         <p
           style={{
-            marginTop: '10px',
-            fontWeight: 'bold',
+            marginTop: '15px',
+            fontWeight: '700', // Increase font weight for better visibility
             color: '#333',
-            fontSize: '1.2rem',
+            fontSize: '1.8rem', // Larger font size for the name
+            fontFamily: "'Roboto', sans-serif", // Set a more elegant font family
+            letterSpacing: '1px', // Add some letter spacing for clarity
           }}
         >
           {userData.username}
@@ -58,9 +69,12 @@ function Profile() {
           variant="primary"
           onClick={toggleGender}
           style={{
-            marginTop: '20px',
+            marginTop: '2px',
             borderRadius: '50%',
-            fontSize: '1.5rem', // Adjust font size for the symbol
+            fontSize: '2rem', // Adjust font size for the symbol
+            padding: '10px 15px',
+            backgroundColor: '#2575fc', // Modify button color
+            border: 'none',
           }}
         >
           🔄

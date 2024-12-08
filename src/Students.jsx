@@ -52,7 +52,7 @@ function Students() {
                 <FaTrophy style={{ fontSize: '2rem', marginRight: '10px' }} />
                 <div>
                   <div>Top Achiever:</div>
-                  <strong>Yung Gumawa</strong>
+                  <strong>Ikaw</strong>
                 </div>
               </div>
             </Col>
@@ -98,7 +98,7 @@ function Students() {
               <ProgressBar now={85} label="Graduation Rate (85%)" variant="success" style={{ borderRadius: '10px' }} />
             </Col>
             <Col>
-              <ProgressBar now={40} label="At-Risk Students (40%)" variant="danger" style={{ borderRadius: '10px' }} />
+              <ProgressBar now={25} label="At-Risk Students (25%)" variant="danger" style={{ borderRadius: '10px' }} />
             </Col>
           </Row>
         </Card.Body>
