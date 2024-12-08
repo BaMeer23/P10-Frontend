@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container } from 'react-bootstrap';
-import jwt_decode from 'jwt-decode'; // Corrected import
+import * as jwtDecode from 'jwt-decode';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ function Dashboard() {
         }, 10000);
       } else {
         try {
-          const decoded_token = jwt_decode(token); // Directly decode token
+          const decoded_token = jwtDecode(token); // Directly decode token
           setUser(decoded_token);
         } catch (error) {
           setTimeout(() => {
