@@ -65,6 +65,13 @@ function Settings({ setBgColor }) {
 
   const createUser = async (e) => {
     e.preventDefault();
+
+    // Check password length
+    if (passwordx.length < 5) {
+      Swal.fire({ icon: 'error', text: 'Password must be at least 5 characters long!' });
+      return;
+    }
+
     if (!token) {
       Swal.fire({ icon: 'error', text: 'No token found. Please log in again.' });
       return;
@@ -132,6 +139,12 @@ function Settings({ setBgColor }) {
 
   const updateUser = async (e) => {
     e.preventDefault();
+
+    // Check password length if password is not empty
+    if (passwordx && passwordx.length < 5) {
+      Swal.fire({ icon: 'error', text: 'Password must be at least 5 characters long!' });
+      return;
+    }
 
     if (!fullname || !username) {
       Swal.fire({ icon: 'error', text: 'Full name and username must be filled out!' });
