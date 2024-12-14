@@ -60,9 +60,9 @@ function App() {
             path="/Register"
             element={!isAuthenticated ? <Register /> : <Navigate to="/Dashboard" />}
           />
-          
+
           {/* Redirect unauthenticated users */}
-          <Route path="*" element={!isAuthenticated ? <Navigate to="/Login" replace /> : <Navigate to="/Dashboard" replace />} />
+          {!isAuthenticated && <Route path="*" element={<Navigate to="/Login" replace />} />}
 
           {/* Authenticated Routes */}
           {isAuthenticated && (
