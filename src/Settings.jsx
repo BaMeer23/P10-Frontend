@@ -133,9 +133,9 @@ function Settings({ setBgColor }) {
   const updateUser = async (e) => {
     e.preventDefault();
 
-    // Validate if all fields are filled
-    if (!fullname || !username || !passwordx) {
-      Swal.fire({ icon: 'error', text: 'All fields must be filled out!' });
+    // Validate if all fields are filled, but allow password to be optional
+    if (!fullname || !username) {
+      Swal.fire({ icon: 'error', text: 'Full name and username must be filled out!' });
       return; // Prevent the form from submitting if any field is empty
     }
 
@@ -292,6 +292,7 @@ function Settings({ setBgColor }) {
                 type="password"
                 value={passwordx}
                 onChange={(e) => setPasswordx(e.target.value)}
+                placeholder="Leave empty if you don't want to change"
               />
             </Form.Group>
             <div className="mt-3">
