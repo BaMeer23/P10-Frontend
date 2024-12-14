@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 
 function NavbarComponent({ user, handleLogout }) {
   const navigate = useNavigate();
-  const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    setToken(storedToken);
-
-    if (!storedToken) {
+    const token = localStorage.getItem('token');
+    if (!token) {
       handleLogout();
     }
-
-    return () => {
-      // Cleanup function (optional if no subscriptions are added)
-    };
   }, [handleLogout]);
 
   const handleLogoutAndRedirect = () => {
+    localStorage.removeItem('token'); // Remove the token from local storage
     handleLogout();
-    navigate('/Login');
+    navigate('/Login'); // Redirect to the Login page
   };
 
   return (

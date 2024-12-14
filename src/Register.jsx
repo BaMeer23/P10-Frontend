@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
-
 const API_ENDPOINT = 'https://myschoolcode.onrender.com/api';
+
 
 function Register() {
   const navigate = useNavigate();

@@ -23,7 +23,15 @@ function App() {
     if (token) {
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
-        setUser(decodedToken);
+        const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
+        if (decodedToken.exp < currentTime) {
+          // Token expired, remove it and set unauthenticated state
+          localStorage.removeItem('token');
+          setIsAuthenticated(false);
+          setUser(null);
+        } else {
+          setUser(decodedToken);
+        }
       } catch (err) {
         console.error('Invalid token:', err);
         localStorage.removeItem('token');

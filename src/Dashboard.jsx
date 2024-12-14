@@ -29,14 +29,6 @@ function Dashboard() {
     fetchUser();
   }, [navigate]);
 
-  const handleLogout = () => {
-    const delayTime = 1500;
-    setTimeout(() => {
-      localStorage.removeItem('token'); // Remove the token from localStorage
-      navigate('/Login'); // Redirect to the Login page
-    }, delayTime);
-  };
-
   return (
     <Container className="mt-5" style={{ paddingTop: '20px' }}>
       <h3 style={{ textAlign: 'center', fontFamily: "'Roboto', sans-serif", color: '#333' }}>
