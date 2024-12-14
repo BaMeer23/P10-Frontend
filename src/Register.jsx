@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
 import axios from 'axios';
-const API_ENDPOINT = 'https://myschoolcode.onrender.com/api';
-
+import { API_ENDPOINT } from './Api'; // Adjust the import path if necessary
 
 function Register() {
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ function Register() {
       return;
     }
     if (password.length < 5) {
-      setError('Password must be at least 6 characters.');
+      setError('Password must be at least 5 characters.');
       return;
     }
     if (password !== confirmPassword) {
@@ -31,7 +30,7 @@ function Register() {
     }
     setLoading(true);
     try {
-      await axios.post(`${API_ENDPOINT}/auth/register`, {
+      await axios.post(`${API_ENDPOINT}/api/auth/register`, {
         fullname,
         username,
         passwordx: password,

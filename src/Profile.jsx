@@ -54,14 +54,15 @@ function Profile() {
           {userData.gender === 'female' ? '👧' : '👦'}
         </div>
         <p
-  style={{
+ style={{
     marginTop: '15px',
     fontWeight: '700', // Increase font weight for better visibility
     color: 'white', // Inner text color
     fontSize: '1.8rem', // Larger font size for the name
     fontFamily: "'Roboto', sans-serif", // Set a more elegant font family
     letterSpacing: '1px', // Add some letter spacing for clarity
-    WebkitTextStroke: '2px black', // Change text outline color to black
+    WebkitTextStroke: '2px #C0C0C0', // Change text outline color to silver
+
   }}
 >
   {userData.username || 'Username'}
