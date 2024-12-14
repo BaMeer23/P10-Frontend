@@ -115,7 +115,7 @@ function Settings({ setBgColor }) {
     setBgColor(newColor);
     localStorage.setItem('bgColor', newColor);
   };
-  
+
   const handleCloseReadModal = () => setShowReadModal(false);
   const handleShowReadModal = (user) => {
     setSelectedUser(user);
@@ -124,14 +124,21 @@ function Settings({ setBgColor }) {
 
   const handleShowUpdateModal = (user) => {
     setSelectedUser(user);
-    setFullname(user.fullname);
-    setUsername(user.username);
-    setPasswordx('');
+    setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
+    setUsername(user.username); // Pre-fill username with the selected user's username
+    setPasswordx(''); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
     setShowUpdateModal(true);
   };
 
   const updateUser = async (e) => {
     e.preventDefault();
+
+    // Validate if all fields are filled
+    if (!fullname || !username || !passwordx) {
+      Swal.fire({ icon: 'error', text: 'All fields must be filled out!' });
+      return; // Prevent the form from submitting if any field is empty
+    }
+
     if (!token) {
       Swal.fire({ icon: 'error', text: 'No token found. Please log in again.' });
       return;
@@ -245,7 +252,11 @@ function Settings({ setBgColor }) {
                 required
               />
             </Form.Group>
-            <Button type="submit">Create User</Button>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Create User
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
@@ -283,7 +294,11 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setPasswordx(e.target.value)}
               />
             </Form.Group>
-            <Button type="submit">Update User</Button>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Update User
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
