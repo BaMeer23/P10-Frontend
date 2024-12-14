@@ -115,7 +115,7 @@ function Settings({ setBgColor }) {
     setBgColor(newColor);
     localStorage.setItem('bgColor', newColor);
   };
-
+  
   const handleCloseReadModal = () => setShowReadModal(false);
   const handleShowReadModal = (user) => {
     setSelectedUser(user);
@@ -124,9 +124,9 @@ function Settings({ setBgColor }) {
 
   const handleShowUpdateModal = (user) => {
     setSelectedUser(user);
-    setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
-    setUsername(user.username); // Pre-fill username with the selected user's username
-    setPasswordx(''); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
+    setFullname(user.fullname);
+    setUsername(user.username);
+    setPasswordx('');
     setShowUpdateModal(true);
   };
 
@@ -245,11 +245,7 @@ function Settings({ setBgColor }) {
                 required
               />
             </Form.Group>
-            <div className="mt-3">
-              <Button type="submit" block>
-                Create User
-              </Button>
-            </div>
+            <Button type="submit">Create User</Button>
           </Form>
         </Modal.Body>
       </Modal>
@@ -287,11 +283,7 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setPasswordx(e.target.value)}
               />
             </Form.Group>
-            <div className="mt-3">
-              <Button type="submit" block>
-                Update User
-              </Button>
-            </div>
+            <Button type="submit">Update User</Button>
           </Form>
         </Modal.Body>
       </Modal>
