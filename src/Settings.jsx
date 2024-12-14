@@ -126,7 +126,7 @@ function Settings({ setBgColor }) {
     setSelectedUser(user);
     setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
     setUsername(user.username); // Pre-fill username with the selected user's username
-    setPasswordx(''); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
+    setPasswordx(''); // Keep the password empty for security reasons
     setShowUpdateModal(true);
   };
 
