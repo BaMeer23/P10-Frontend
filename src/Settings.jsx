@@ -18,6 +18,7 @@ function Settings({ setBgColor }) {
   const [decodedToken, setDecodedToken] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showReadModal, setShowReadModal] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -115,7 +116,7 @@ function Settings({ setBgColor }) {
     setBgColor(newColor);
     localStorage.setItem('bgColor', newColor);
   };
-  
+
   const handleCloseReadModal = () => setShowReadModal(false);
   const handleShowReadModal = (user) => {
     setSelectedUser(user);
@@ -124,14 +125,27 @@ function Settings({ setBgColor }) {
 
   const handleShowUpdateModal = (user) => {
     setSelectedUser(user);
-    setFullname(user.fullname);
-    setUsername(user.username);
-    setPasswordx('');
+    setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
+    setUsername(user.username); // Pre-fill username with the selected user's username
+    setPasswordx(user.passwordx); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
+    setFormErrors({}); // Reset errors when modal is shown
     setShowUpdateModal(true);
   };
 
   const updateUser = async (e) => {
     e.preventDefault();
+
+    // Basic validation for empty fields
+    const errors = {};
+    if (!fullname) errors.fullname = 'Full Name is required';
+    if (!username) errors.username = 'Username is required';
+    if (!passwordx) errors.passwordx = 'Password is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
     if (!token) {
       Swal.fire({ icon: 'error', text: 'No token found. Please log in again.' });
       return;
@@ -245,7 +259,11 @@ function Settings({ setBgColor }) {
                 required
               />
             </Form.Group>
-            <Button type="submit">Create User</Button>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Create User
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
@@ -265,6 +283,7 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setFullname(e.target.value)}
                 required
               />
+              {formErrors.fullname && <p className="text-danger">{formErrors.fullname}</p>}
             </Form.Group>
             <Form.Group>
               <Form.Label>Username</Form.Label>
@@ -274,6 +293,7 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
+              {formErrors.username && <p className="text-danger">{formErrors.username}</p>}
             </Form.Group>
             <Form.Group>
               <Form.Label>Password</Form.Label>
@@ -282,8 +302,13 @@ function Settings({ setBgColor }) {
                 value={passwordx}
                 onChange={(e) => setPasswordx(e.target.value)}
               />
+              {formErrors.passwordx && <p className="text-danger">{formErrors.passwordx}</p>}
             </Form.Group>
-            <Button type="submit">Update User</Button>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Update User
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
