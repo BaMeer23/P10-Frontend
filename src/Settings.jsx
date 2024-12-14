@@ -1,122 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Correctly imported jwtDecode for version 4.x
+import { jwtDecode } from 'jwt-decode';
 import { Container, Row, Col, Card, Button, Modal, Form, Table } from 'react-bootstrap';
-import { FaCog, FaPaintBrush } from 'react-icons/fa';
+import { FaCog, FaPaintBrush, FaEdit, FaEye, FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import { API_ENDPOINT } from './Api';
-
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error('Error Boundary Caught:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="text-center">
-          <h1>Something went wrong.</h1>
-          <p>Please try refreshing the page or contact support.</p>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
 
 function Settings({ setBgColor }) {
   const [users, setUsers] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [fullname, setFullname] = useState('');
   const [username, setUsername] = useState('');
   const [passwordx, setPasswordx] = useState('');
   const [backgroundColor, setBackgroundColor] = useState(localStorage.getItem('bgColor') || '');
   const [token, setToken] = useState('');
   const [decodedToken, setDecodedToken] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showReadModal, setShowReadModal] = useState(false);
 
-  // Retrieve and decode token from localStorage
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) {
-      console.error('No token found in localStorage');
-    } else {
-      try {
-        const decoded_token = jwtDecode(token); // Correct usage of jwtDecode for version 4.x
-        const expirationTime = decoded_token.exp * 1000; // JWT exp is in seconds
-        const currentTime = Date.now();
+    if (token) {
+      const decoded_token = jwtDecode(token);
+      const expirationTime = decoded_token.exp * 1000;
+      const currentTime = Date.now();
 
-        if (currentTime >= expirationTime) {
-          console.error('Token has expired');
-          Swal.fire({
-            text: 'Your session has expired. Please log in again.',
-            icon: 'warning',
-          });
-          // Optionally, log out the user or refresh the token here
-          localStorage.removeItem('token');
-          window.location.href = '/login'; // Redirect to login page
-        } else {
-          console.log('Decoded Token:', decoded_token);
-          setDecodedToken(decoded_token);
-          setToken(token);
-        }
-      } catch (error) {
-        console.error('Failed to decode token:', error);
+      if (currentTime >= expirationTime) {
+        Swal.fire({
+          text: 'Your session has expired. Please log in again.',
+          icon: 'warning',
+        });
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      } else {
+        setDecodedToken(decoded_token);
+        setToken(token);
       }
+    } else {
+      console.error('No token found in localStorage');
     }
   }, []);
 
-  // Set headers for API calls with the Bearer token
-  const headers = token
-    ? { accept: 'application/json', Authorization: `Bearer ${token}` }
-    : { accept: 'application/json' };
+  const headers = token ? { accept: 'application/json', Authorization: `Bearer ${token}` } : { accept: 'application/json' };
 
-  // Fetch users
   const fetchUsers = async () => {
     try {
-      console.log("Token being sent:", token); // Log the token for debugging
-      const { data } = await axios.get(`${API_ENDPOINT}/api/user/`, { headers });
-      console.log('Fetched Users:', data);
+      const { data } = await axios.get(`${API_ENDPOINT}/api/user`, { headers });
       if (Array.isArray(data)) {
         setUsers(data);
       } else {
-        console.error('Invalid response format: Expected an array of users.');
-        Swal.fire({
-          text: 'Error fetching users. Invalid response format.',
-          icon: 'error',
-        });
+        Swal.fire({ text: 'Error fetching users. Invalid response format.', icon: 'error' });
       }
     } catch (error) {
-      console.error('API request error:', error);
-      if (error.response) {
-        console.error('Error Response:', error.response);
-        const errorMessage = error.response.data?.message || 'Error fetching users';
-        Swal.fire({
-          text: errorMessage,
-          icon: 'error',
-        });
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-        Swal.fire({
-          text: 'No response from the server. Please try again later.',
-          icon: 'error',
-        });
-      } else {
-        console.error('Error setting up request:', error.message);
-        Swal.fire({
-          text: 'Error setting up the request.',
-          icon: 'error',
-        });
-      }
+      handleError(error, 'Error fetching users');
     }
   };
 
@@ -126,12 +63,19 @@ function Settings({ setBgColor }) {
     }
   }, [token]);
 
-  // Create a user
   const createUser = async (e) => {
     e.preventDefault();
+    if (!token) {
+      Swal.fire({ icon: 'error', text: 'No token found. Please log in again.' });
+      return;
+    }
+
     try {
-      const response = await axios.post(`${API_ENDPOINT}/api/user`, { fullname, username, passwordx }, { headers });
-      console.log('User created response:', response.data);
+      const response = await axios.post(
+        `${API_ENDPOINT}/api/user`,
+        { fullname, username, passwordx },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       Swal.fire({ icon: 'success', text: 'User created successfully!' });
       fetchUsers();
       setShowCreateModal(false);
@@ -139,30 +83,10 @@ function Settings({ setBgColor }) {
       setUsername('');
       setPasswordx('');
     } catch (error) {
-      console.error('Error details:', error);
-      if (error.response) {
-        const errorMessage = error.response.data?.message || 'Error creating user';
-        if (error.response?.status === 409) {
-          Swal.fire({
-            text: 'Username already exists.',
-            icon: 'error',
-          });
-        } else {
-          Swal.fire({
-            text: errorMessage,
-            icon: 'error',
-          });
-        }
-      } else {
-        Swal.fire({
-          text: 'Network error or no response',
-          icon: 'error',
-        });
-      }
+      handleError(error, 'Error creating user');
     }
   };
 
-  // Delete user
   const deleteUser = async (id) => {
     const isConfirm = await Swal.fire({
       title: 'Are you sure?',
@@ -180,90 +104,112 @@ function Settings({ setBgColor }) {
         Swal.fire({ icon: 'success', text: 'User deleted successfully' });
         fetchUsers();
       } catch (error) {
-        console.error('Error deleting user:', error);
-        Swal.fire({
-          text: error.response?.data?.message || 'Error deleting user',
-          icon: 'error',
-        });
+        handleError(error, 'Error deleting user');
       }
     }
   };
 
   const handleBackgroundChange = () => {
-    const newColor = backgroundColor === 'black' ? '' : 'black';
+    const newColor = backgroundColor === '#2c2c2c' ? '' : '#2c2c2c'; // Light black
     setBackgroundColor(newColor);
     setBgColor(newColor);
     localStorage.setItem('bgColor', newColor);
   };
+  
+  const handleCloseReadModal = () => setShowReadModal(false);
+  const handleShowReadModal = (user) => {
+    setSelectedUser(user);
+    setShowReadModal(true);
+  };
+
+  const handleShowUpdateModal = (user) => {
+    setSelectedUser(user);
+    setFullname(user.fullname);
+    setUsername(user.username);
+    setPasswordx('');
+    setShowUpdateModal(true);
+  };
+
+  const updateUser = async (e) => {
+    e.preventDefault();
+    if (!token) {
+      Swal.fire({ icon: 'error', text: 'No token found. Please log in again.' });
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `${API_ENDPOINT}/api/user/${selectedUser.user_id}`,
+        { fullname, username, passwordx },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      Swal.fire({ icon: 'success', text: 'User updated successfully!' });
+      fetchUsers();
+      setShowUpdateModal(false);
+    } catch (error) {
+      handleError(error, 'Error updating user');
+    }
+  };
 
   return (
-    <ErrorBoundary>
-      <Container className="mt-5">
-        <div
-          className="card"
-          style={{
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            borderRadius: '12px',
-            background: '#ffffff',
-            padding: '30px',
-            textAlign: 'center',
-          }}
-        >
-          <h1 style={{ fontFamily: 'Roboto, sans-serif', fontWeight: '700', color: '#333' }}>
-            <FaCog style={{ fontSize: '2rem', color: '#6a11cb' }} /> Settings
-          </h1>
-          <p style={{ color: '#555', marginTop: '15px', fontSize: '1rem' }}>
-            Update your preferences and manage users.
-          </p>
-        </div>
+    <Container className="mt-5">
+      <div className="card" style={{ padding: '30px' }}>
+        <h1>Settings</h1>
+        <p>Update your preferences and manage users.</p>
+      </div>
 
-        <Row className="mt-4">
-          <Col md={12}>
-            <Card style={{ boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)', borderRadius: '12px' }}>
-              <Card.Body>
-                <Card.Title>
-                  <FaPaintBrush style={{ fontSize: '1.5rem', color: '#6a11cb' }} /> Change Background
-                </Card.Title>
-                <Button variant="primary" onClick={handleBackgroundChange} className="mt-3">
-                  {backgroundColor === 'black' ? 'Revert to Default Background' : 'Change Background Color to Black'}
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+      <Row className="mt-4">
+        <Col md={12}>
+          <Card>
+            <Card.Body>
+              <Card.Title>
+                <FaPaintBrush /> Change Background
+              </Card.Title>
+              <Button variant="primary" onClick={handleBackgroundChange}>
+                {backgroundColor === 'black' ? 'Revert to Default Background' : 'Change Background Color to Black'}
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
-        <Row className="mt-4">
-          <Col md={12}>
-            <Button variant="success" className="mb-2 float-end" onClick={() => setShowCreateModal(true)}>
-              Create User
-            </Button>
-            <Table bordered>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Username</th>
-                  <th>Full Name</th>
-                  <th>Actions</th>
+      <Row className="mt-4">
+        <Col md={12}>
+          <Button variant="success" className="mb-2 float-end" onClick={() => setShowCreateModal(true)}>
+            <FaCog /> Create User
+          </Button>
+          <Table bordered style={{ borderRadius: '10px', overflow: 'hidden' }}>
+            <thead>
+              <tr>
+                <th className="text-center">ID</th>
+                <th className="text-center">Username</th>
+                <th className="text-center">Full Name</th>
+                <th className="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.user_id}>
+                  <td className="text-center">{user.user_id}</td>
+                  <td className="text-center">{user.username}</td>
+                  <td className="text-center">{user.fullname}</td>
+                  <td className="d-flex justify-content-center align-items-center">
+                    <Button variant="info" size="sm" onClick={() => handleShowReadModal(user)} className="mx-1">
+                      <FaEye /> Read
+                    </Button>
+                    <Button variant="warning" size="sm" onClick={() => handleShowUpdateModal(user)} className="mx-1">
+                      <FaEdit /> Update
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={() => deleteUser(user.user_id)} className="mx-1">
+                      <FaTrash /> Delete
+                    </Button>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user.user_id}>
-                    <td>{user.user_id}</td>
-                    <td>{user.username}</td>
-                    <td>{user.fullname}</td>
-                    <td>
-                      <Button variant="danger" onClick={() => deleteUser(user.user_id)}>
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-      </Container>
+              ))}
+            </tbody>
+          </Table>
+        </Col>
+      </Row>
 
       {/* Create User Modal */}
       <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
@@ -272,43 +218,93 @@ function Settings({ setBgColor }) {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={createUser}>
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Full Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter full name"
                 value={fullname}
                 onChange={(e) => setFullname(e.target.value)}
                 required
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Username</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group>
               <Form.Label>Password</Form.Label>
               <Form.Control
                 type="password"
-                placeholder="Enter password"
                 value={passwordx}
                 onChange={(e) => setPasswordx(e.target.value)}
                 required
               />
             </Form.Group>
-            <Button variant="primary" type="submit">
-              Create User
-            </Button>
+            <Button type="submit">Create User</Button>
           </Form>
         </Modal.Body>
       </Modal>
-    </ErrorBoundary>
+
+      {/* Update User Modal */}
+      <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={updateUser}>
+            <Form.Group>
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={passwordx}
+                onChange={(e) => setPasswordx(e.target.value)}
+              />
+            </Form.Group>
+            <Button type="submit">Update User</Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Read User Modal */}
+      <Modal show={showReadModal} onHide={handleCloseReadModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>User Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {selectedUser ? (
+            <div>
+              <p><strong>Full Name:</strong> {selectedUser.fullname}</p>
+              <p><strong>Username:</strong> {selectedUser.username}</p>
+            </div>
+          ) : (
+            <p>No user selected</p>
+          )}
+        </Modal.Body>
+      </Modal>
+    </Container>
   );
 }
 
