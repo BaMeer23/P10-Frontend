@@ -112,7 +112,7 @@ function Settings({ setBgColor }) {
   const handleBackgroundChange = () => {
     const newColor = backgroundColor === '#2c2c2c' ? '' : '#2c2c2c'; // Light black
     setBackgroundColor(newColor);
-    setBgColor(newColor);
+    setBgColor(newColor); // Ensure setBgColor is properly passed down from the parent component
     localStorage.setItem('bgColor', newColor);
   };
 
@@ -133,10 +133,9 @@ function Settings({ setBgColor }) {
   const updateUser = async (e) => {
     e.preventDefault();
 
-    // Validate if all fields are filled, but allow password to be optional
     if (!fullname || !username) {
       Swal.fire({ icon: 'error', text: 'Full name and username must be filled out!' });
-      return; // Prevent the form from submitting if any field is empty
+      return;
     }
 
     if (!token) {

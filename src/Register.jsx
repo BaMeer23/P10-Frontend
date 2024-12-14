@@ -20,8 +20,8 @@ function Register() {
       setError('All fields are required.');
       return;
     }
-    if (password.length < 5) {
-      setError('Password must be at least 5 characters.');
+    if (password.length < 1) {
+      setError('Password must be at least 1 characters.');
       return;
     }
     if (password !== confirmPassword) {
