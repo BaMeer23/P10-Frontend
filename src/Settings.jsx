@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Named import for jwt-decode
+import { jwtDecode } from 'jwt-decode'; // Correctly imported jwtDecode for version 4.x
 import { Container, Row, Col, Card, Button, Modal, Form, Table } from 'react-bootstrap';
 import { FaCog, FaPaintBrush } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -51,22 +51,39 @@ function Settings({ setBgColor }) {
       console.error('No token found in localStorage');
     } else {
       try {
-        const decoded_token = jwtDecode(token); // Directly decode token
-        console.log('Decoded Token:', decoded_token);
-        setDecodedToken(decoded_token); // Set decoded token if needed
-        setToken(token);  // Set token value (no need for decoded_token.token)
+        const decoded_token = jwtDecode(token); // Correct usage of jwtDecode for version 4.x
+        const expirationTime = decoded_token.exp * 1000; // JWT exp is in seconds
+        const currentTime = Date.now();
+
+        if (currentTime >= expirationTime) {
+          console.error('Token has expired');
+          Swal.fire({
+            text: 'Your session has expired. Please log in again.',
+            icon: 'warning',
+          });
+          // Optionally, log out the user or refresh the token here
+          localStorage.removeItem('token');
+          window.location.href = '/login'; // Redirect to login page
+        } else {
+          console.log('Decoded Token:', decoded_token);
+          setDecodedToken(decoded_token);
+          setToken(token);
+        }
       } catch (error) {
         console.error('Failed to decode token:', error);
       }
     }
   }, []);
 
-  // Set headers for API calls
-  const headers = token ? { accept: 'application/json', Authorization: `Bearer ${token}` } : { accept: 'application/json' };
+  // Set headers for API calls with the Bearer token
+  const headers = token
+    ? { accept: 'application/json', Authorization: `Bearer ${token}` }
+    : { accept: 'application/json' };
 
   // Fetch users
   const fetchUsers = async () => {
     try {
+      console.log("Token being sent:", token); // Log the token for debugging
       const { data } = await axios.get(`${API_ENDPOINT}/api/user/`, { headers });
       console.log('Fetched Users:', data);
       if (Array.isArray(data)) {
@@ -79,22 +96,22 @@ function Settings({ setBgColor }) {
         });
       }
     } catch (error) {
-      console.error('API request error:', error); // Log the entire error object
+      console.error('API request error:', error);
       if (error.response) {
-        console.error('Error Response:', error.response); // Log the error response from the server
+        console.error('Error Response:', error.response);
         const errorMessage = error.response.data?.message || 'Error fetching users';
         Swal.fire({
           text: errorMessage,
           icon: 'error',
         });
       } else if (error.request) {
-        console.error('No response received:', error.request); // Log the request if no response was received
+        console.error('No response received:', error.request);
         Swal.fire({
           text: 'No response from the server. Please try again later.',
           icon: 'error',
         });
       } else {
-        console.error('Error setting up request:', error.message); // Log if the error occurred during request setup
+        console.error('Error setting up request:', error.message);
         Swal.fire({
           text: 'Error setting up the request.',
           icon: 'error',

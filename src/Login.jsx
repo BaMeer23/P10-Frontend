@@ -200,7 +200,7 @@ function Login({ setIsAuthenticated }) {
                         fontWeight: 'bold',
                       }}
                     >
-                      Don't have an account? Register
+                      Create an account
                     </Link>
                   </div>
                 </Form>
