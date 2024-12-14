@@ -245,14 +245,12 @@ function Settings({ setBgColor }) {
         required
       />
     </Form.Group>
-    
-    {/* Add margin-top to push the button down */}
+ 
     <div className="mt-3">
       <Button type="submit">Create User</Button>
     </div>
   </Form>
 </Modal.Body>
-
       </Modal>
 
       {/* Update User Modal */}
