@@ -213,15 +213,9 @@ function Settings({ setBgColor }) {
                   <td className="text-center">{user.username}</td>
                   <td className="text-center">{user.fullname}</td>
                   <td className="d-flex justify-content-center align-items-center">
-                    <Button variant="info" size="sm" onClick={() => handleShowReadModal(user)} className="mx-1">
-                      <FaEye /> Read
-                    </Button>
-                    <Button variant="warning" size="sm" onClick={() => handleShowUpdateModal(user)} className="mx-1">
-                      <FaEdit /> Update
-                    </Button>
-                    <Button variant="danger" size="sm" onClick={() => deleteUser(user.user_id)} className="mx-1">
-                      <FaTrash /> Delete
-                    </Button>
+                    <Button variant="warning" onClick={() => handleShowReadModal(user)}><FaEye /></Button>
+                    <Button variant="info" className="mx-2" onClick={() => handleShowUpdateModal(user)}><FaEdit /></Button>
+                    <Button variant="danger" onClick={() => deleteUser(user.user_id)}><FaTrash /></Button>
                   </td>
                 </tr>
               ))}
@@ -230,45 +224,28 @@ function Settings({ setBgColor }) {
         </Col>
       </Row>
 
-      {/* Create User Modal */}
+      {/* Modals for Creating, Updating, Viewing Users */}
       <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Create User</Modal.Title>
+          <Modal.Title>Create New User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={createUser}>
-            <Form.Group>
+            <Form.Group controlId="formFullname">
               <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
-                required
-              />
+              <Form.Control type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="formUsername">
               <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
+              <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={passwordx}
-                onChange={(e) => setPasswordx(e.target.value)}
-                required
-              />
+              <Form.Control type="password" value={passwordx} onChange={(e) => setPasswordx(e.target.value)} />
             </Form.Group>
-            <div className="mt-3">
-              <Button type="submit" block>
-                Create User
-              </Button>
-            </div>
+            <Button variant="primary" type="submit">
+              Create User
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
@@ -280,38 +257,21 @@ function Settings({ setBgColor }) {
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={updateUser}>
-            <Form.Group>
+            <Form.Group controlId="formFullname">
               <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
-                required
-              />
+              <Form.Control type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="formUsername">
               <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
+              <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
             </Form.Group>
-            <Form.Group>
+            <Form.Group controlId="formPassword">
               <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={passwordx}
-                onChange={(e) => setPasswordx(e.target.value)}
-                placeholder="Leave empty if you don't want to change"
-              />
+              <Form.Control type="password" value={passwordx} onChange={(e) => setPasswordx(e.target.value)} />
             </Form.Group>
-            <div className="mt-3">
-              <Button type="submit" block>
-                Update User
-              </Button>
-            </div>
+            <Button variant="primary" type="submit">
+              Update User
+            </Button>
           </Form>
         </Modal.Body>
       </Modal>
@@ -319,16 +279,14 @@ function Settings({ setBgColor }) {
       {/* Read User Modal */}
       <Modal show={showReadModal} onHide={handleCloseReadModal}>
         <Modal.Header closeButton>
-          <Modal.Title>User Details</Modal.Title>
+          <Modal.Title>View User</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {selectedUser ? (
+          {selectedUser && (
             <div>
-              <p><strong>Full Name:</strong> {selectedUser.fullname}</p>
-              <p><strong>Username:</strong> {selectedUser.username}</p>
+              <h4>Full Name: {selectedUser.fullname}</h4>
+              <h5>Username: {selectedUser.username}</h5>
             </div>
-          ) : (
-            <p>No user selected</p>
           )}
         </Modal.Body>
       </Modal>
