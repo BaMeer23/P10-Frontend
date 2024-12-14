@@ -18,7 +18,6 @@ function Settings({ setBgColor }) {
   const [decodedToken, setDecodedToken] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const [showReadModal, setShowReadModal] = useState(false);
-  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -127,23 +126,17 @@ function Settings({ setBgColor }) {
     setSelectedUser(user);
     setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
     setUsername(user.username); // Pre-fill username with the selected user's username
-    setPasswordx(user.passwordx); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
-    setFormErrors({}); // Reset errors when modal is shown
+    setPasswordx(''); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
     setShowUpdateModal(true);
   };
 
   const updateUser = async (e) => {
     e.preventDefault();
 
-    // Basic validation for empty fields
-    const errors = {};
-    if (!fullname) errors.fullname = 'Full Name is required';
-    if (!username) errors.username = 'Username is required';
-    if (!passwordx) errors.passwordx = 'Password is required';
-
-    if (Object.keys(errors).length > 0) {
-      setFormErrors(errors);
-      return;
+    // Validate if all fields are filled
+    if (!fullname || !username || !passwordx) {
+      Swal.fire({ icon: 'error', text: 'All fields must be filled out!' });
+      return; // Prevent the form from submitting if any field is empty
     }
 
     if (!token) {
@@ -283,7 +276,6 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setFullname(e.target.value)}
                 required
               />
-              {formErrors.fullname && <p className="text-danger">{formErrors.fullname}</p>}
             </Form.Group>
             <Form.Group>
               <Form.Label>Username</Form.Label>
@@ -293,7 +285,6 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
-              {formErrors.username && <p className="text-danger">{formErrors.username}</p>}
             </Form.Group>
             <Form.Group>
               <Form.Label>Password</Form.Label>
@@ -302,7 +293,6 @@ function Settings({ setBgColor }) {
                 value={passwordx}
                 onChange={(e) => setPasswordx(e.target.value)}
               />
-              {formErrors.passwordx && <p className="text-danger">{formErrors.passwordx}</p>}
             </Form.Group>
             <div className="mt-3">
               <Button type="submit" block>
