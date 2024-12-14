@@ -115,7 +115,7 @@ function Settings({ setBgColor }) {
     setBgColor(newColor);
     localStorage.setItem('bgColor', newColor);
   };
-  
+
   const handleCloseReadModal = () => setShowReadModal(false);
   const handleShowReadModal = (user) => {
     setSelectedUser(user);
@@ -124,9 +124,9 @@ function Settings({ setBgColor }) {
 
   const handleShowUpdateModal = (user) => {
     setSelectedUser(user);
-    setFullname(user.fullname);
-    setUsername(user.username);
-    setPasswordx('');
+    setFullname(user.fullname); // Pre-fill fullname with the selected user's fullname
+    setUsername(user.username); // Pre-fill username with the selected user's username
+    setPasswordx(''); // You may or may not want to pre-fill the password (password should be kept empty for security reasons)
     setShowUpdateModal(true);
   };
 
@@ -212,47 +212,47 @@ function Settings({ setBgColor }) {
       </Row>
 
       {/* Create User Modal */}
-    {/* Create User Modal */}
-<Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Create User</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Form onSubmit={createUser}>
-      <Form.Group>
-        <Form.Label>Full Name</Form.Label>
-        <Form.Control
-          type="text"
-          value={fullname}
-          onChange={(e) => setFullname(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Username</Form.Label>
-        <Form.Control
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Password</Form.Label>
-        <Form.Control
-          type="password"
-          value={passwordx}
-          onChange={(e) => setPasswordx(e.target.value)}
-          required
-        />
-      </Form.Group>
-      <div className="mt-auto">
-        <Button type="submit">Create User</Button>
-      </div>
-    </Form>
-  </Modal.Body>
-</Modal>
-
+      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={createUser}>
+            <Form.Group>
+              <Form.Label>Full Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={fullname}
+                onChange={(e) => setFullname(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type="password"
+                value={passwordx}
+                onChange={(e) => setPasswordx(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Create User
+              </Button>
+            </div>
+          </Form>
+        </Modal.Body>
+      </Modal>
 
       {/* Update User Modal */}
       <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
@@ -287,7 +287,11 @@ function Settings({ setBgColor }) {
                 onChange={(e) => setPasswordx(e.target.value)}
               />
             </Form.Group>
-            <Button type="submit">Update User</Button>
+            <div className="mt-3">
+              <Button type="submit" block>
+                Update User
+              </Button>
+            </div>
           </Form>
         </Modal.Body>
       </Modal>
