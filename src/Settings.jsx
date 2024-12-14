@@ -212,43 +212,47 @@ function Settings({ setBgColor }) {
       </Row>
 
       {/* Create User Modal */}
-      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={createUser}>
-            <Form.Group>
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={fullname}
-                onChange={(e) => setFullname(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                value={passwordx}
-                onChange={(e) => setPasswordx(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button type="submit">Create User</Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
+    {/* Create User Modal */}
+<Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
+  <Modal.Header closeButton>
+    <Modal.Title>Create User</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <Form onSubmit={createUser}>
+      <Form.Group>
+        <Form.Label>Full Name</Form.Label>
+        <Form.Control
+          type="text"
+          value={fullname}
+          onChange={(e) => setFullname(e.target.value)}
+          required
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Username</Form.Label>
+        <Form.Control
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label>Password</Form.Label>
+        <Form.Control
+          type="password"
+          value={passwordx}
+          onChange={(e) => setPasswordx(e.target.value)}
+          required
+        />
+      </Form.Group>
+      <div className="mt-auto">
+        <Button type="submit">Create User</Button>
+      </div>
+    </Form>
+  </Modal.Body>
+</Modal>
+
 
       {/* Update User Modal */}
       <Modal show={showUpdateModal} onHide={() => setShowUpdateModal(false)}>
