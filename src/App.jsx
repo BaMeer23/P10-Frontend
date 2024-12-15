@@ -25,7 +25,6 @@ function App() {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const currentTime = Math.floor(Date.now() / 1000); // current time in seconds
         if (decodedToken.exp < currentTime) {
-          // Token expired, remove it and set unauthenticated state
           localStorage.removeItem('token');
           setIsAuthenticated(false);
           setUser(null);
@@ -61,9 +60,6 @@ function App() {
             element={!isAuthenticated ? <Register /> : <Navigate to="/Dashboard" />}
           />
 
-          {/* Redirect unauthenticated users */}
-          {!isAuthenticated && <Route path="*" element={<Navigate to="/Login" replace />} />}
-
           {/* Authenticated Routes */}
           {isAuthenticated && (
             <>
@@ -74,9 +70,11 @@ function App() {
               <Route path="/Students" element={<Students />} />
               <Route path="/Profile" element={<Profile />} />
               <Route path="/Settings" element={<Settings setBgColor={setBgColor} />} />
-              <Route path="*" element={<Navigate to="/Dashboard" replace />} />
             </>
           )}
+
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to={isAuthenticated ? "/Dashboard" : "/Login"} replace />} />
         </Routes>
       </div>
     </Router>
