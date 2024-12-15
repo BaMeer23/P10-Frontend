@@ -44,16 +44,16 @@ function Register() {
   };
 
   return (
-    <Container>
-      <Row className="justify-content-md-center" style={{ marginTop: '10vh' }}>
-        <Col md={4}>
+    <Container fluid style={{ paddingTop: '5vh', minHeight: '100vh' }}>
+      <Row className="justify-content-md-center" style={{ marginTop: '0vh' }}>
+        <Col md={5} lg={4}>
           <div
             className="card"
             style={{
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-              borderRadius: '12px',
-              background: '#ffffff',
-              padding: '20px',
+              boxShadow: '0 8px 20px rgba(0, 0, 0, 0.2)',
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #ffffff, #f7f7f7)',
+              padding: '30px',
             }}
           >
             <div className="card-body">
@@ -61,69 +61,74 @@ function Register() {
                 className="text-center"
                 style={{
                   fontFamily: "'Roboto', sans-serif",
-                  fontWeight: '700',
-                  color: '#333',
+                  fontWeight: '800',
+                  color: '#4A4A4A',
+                  marginBottom: '20px',
                 }}
               >
-                Register
+                Create an Account
               </h3>
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formFullname">
-                  <Form.Label>Full Name</Form.Label>
+                  <Form.Label style={{ fontWeight: '500', color: '#555' }}>Full Name</Form.Label>
                   <Form.Control
                     type="text"
                     value={fullname}
                     onChange={(e) => setFullname(e.target.value)}
                     placeholder="Enter your full name"
                     style={{
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       border: '1px solid #ddd',
-                      padding: '10px',
+                      padding: '12px',
+                      fontSize: '14px',
                     }}
                     required
                   />
                 </Form.Group>
                 <Form.Group controlId="formUsername" className="mt-3">
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label style={{ fontWeight: '500', color: '#555' }}>Username</Form.Label>
                   <Form.Control
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Enter your username"
                     style={{
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       border: '1px solid #ddd',
-                      padding: '10px',
+                      padding: '12px',
+                      fontSize: '14px',
                     }}
                     required
                   />
                 </Form.Group>
                 <Form.Group controlId="formPassword" className="mt-3">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label style={{ fontWeight: '500', color: '#555' }}>Password</Form.Label>
                   <Form.Control
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
                     style={{
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       border: '1px solid #ddd',
-                      padding: '10px',
+                      padding: '12px',
+                      fontSize: '14px',
                     }}
                     required
                   />
                 </Form.Group>
                 <Form.Group controlId="formConfirmPassword" className="mt-3">
-                  <Form.Label>Confirm Password</Form.Label>
+                  <Form.Label style={{ fontWeight: '500', color: '#555' }}>Confirm Password</Form.Label>
                   <Form.Control
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Confirm your password"
                     style={{
-                      borderRadius: '5px',
+                      borderRadius: '8px',
                       border: '1px solid #ddd',
-                      padding: '10px',
+                      padding: '12px',
+                      fontSize: '14px',
                     }}
                     required
                   />
@@ -134,30 +139,33 @@ function Register() {
                   </Alert>
                 )}
                 <Button
-                  variant="dark"
+                  variant="primary"
                   type="submit"
-                  className="w-100 mt-3"
+                  className="w-100 mt-4"
                   style={{
-                    background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                    background: 'linear-gradient(135deg, #6a11cb, #2575fc)',
                     border: 'none',
-                    borderRadius: '5px',
+                    borderRadius: '8px',
                     padding: '12px 0',
-                    fontWeight: 'bold',
+                    fontWeight: '600',
+                    fontSize: '16px',
                   }}
                   disabled={loading}
                 >
                   {loading ? 'Registering...' : 'Register'}
                 </Button>
                 <Button
-                  variant="secondary"
-                  className="w-100 mt-2"
+                  variant="outline-secondary"
+                  className="w-100 mt-3"
                   onClick={() => navigate('/Login')}
                   disabled={loading}
                   style={{
-                    borderRadius: '5px',
-                    border: '1px solid #ddd',
+                    borderRadius: '8px',
                     padding: '12px 0',
-                    fontWeight: 'bold',
+                    fontWeight: '600',
+                    fontSize: '16px',
+                    color: '#555',
+                    border: '1px solid #ddd',
                   }}
                 >
                   Back to Login
